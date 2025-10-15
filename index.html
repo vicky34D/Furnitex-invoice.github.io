@@ -410,7 +410,7 @@
             y += 60;
 
             // PDF Items Table
-            const head = [["SNo", "Particulars", "Measurement", "Rate (₹)", "Price (₹)"]];
+            const head = [["SNo", "Particulars", "Measurement", "Rate (Rs.)", "Price (Rs.)"]];
             const body = [];
             tableBody.querySelectorAll('tr').forEach((row, i) => {
                 const particularSelect = row.cells[1].querySelector('select');
@@ -443,14 +443,14 @@
             doc.setFontSize(10); doc.setFont('helvetica', 'bold');
             doc.text('Grand Total:', rightMargin - 150, y);
             doc.setFont('helvetica', 'normal');
-            doc.text(`₹ ${formatMoney(grandTotal)}`, rightMargin, y, { align: 'right' });
+            doc.text(`Rs. ${formatMoney(grandTotal)}`, rightMargin, y, { align: 'right' });
             y += 18;
             if (window._paymentsSnapshot && window._paymentsSnapshot.length > 0) {
                  window._paymentsSnapshot.forEach(p => {
                     doc.setFont('helvetica', 'bold');
                     doc.text(`Paid (${new Date(p.date).toLocaleDateString('en-IN')}):`, rightMargin - 150, y);
                     doc.setFont('helvetica', 'normal');
-                    doc.text(`- ₹ ${formatMoney(p.amt)}`, rightMargin, y, { align: 'right' });
+                    doc.text(`- Rs. ${formatMoney(p.amt)}`, rightMargin, y, { align: 'right' });
                     y += 18;
                  });
             }
@@ -459,7 +459,7 @@
             doc.setLineWidth(1); doc.line(rightMargin - 160, y, rightMargin, y); y += 5;
             doc.setFontSize(12); doc.setFont('helvetica', 'bold');
             doc.text('Amount Due:', rightMargin - 150, y + 12);
-            doc.text(`₹ ${formatMoney(finalPayable)}`, rightMargin, y + 12, { align: 'right' });
+            doc.text(`Rs. ${formatMoney(finalPayable)}`, rightMargin, y + 12, { align: 'right' });
             
             // PDF Footer
             const pageHeight = doc.internal.pageSize.getHeight();
@@ -531,3 +531,4 @@
     </script>
 </body>
 </html>
+
