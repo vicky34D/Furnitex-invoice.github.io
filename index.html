@@ -102,7 +102,7 @@
                         <tr>
                             <th class="p-3 w-12 text-center">S.No.</th>
                             <th class="p-3">Particulars</th>
-                            <th class="p-3">Measurement / Sqft</th>
+                            <th class="p-3">Measurement / Unit</th>
                             <th class="p-3">Rate (₹)</th>
                             <th class="p-3">Price (₹)</th>
                             <th class="p-3">FURNITEX Remarks</th>
@@ -247,9 +247,13 @@
                     <input type="text" placeholder="Custom particulars..." class="table-input mt-1 custom-input" style="display: none;">
                 </td>
                 <td class="p-2">
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-1">
                         <input type="text" class="table-input measurement-expression flex-grow" placeholder="e.g., 7*7 or 10" data-calculated-value="0">
-                        <span class="measurement-result text-slate-600 font-medium whitespace-nowrap"></span>
+                        <select class="table-select unit-select w-20 border-l border-slate-200">
+                            <option value="Sqft">Sqft</option>
+                            <option value="Pcs">Pcs</option>
+                        </select>
+                        <span class="measurement-result text-slate-600 font-medium whitespace-nowrap w-24 text-right"></span>
                     </div>
                 </td>
                 <td class="p-2">
@@ -308,7 +312,6 @@
          */
         const updateTotals = () => {
             let grandTotal = 0;
-            const serviceItems = ["Repairing", "Wood Polish"];
             tableBody.querySelectorAll('tr').forEach(row => {
                 const measurementInput = row.querySelector('.measurement-expression');
                 const measurementResult = row.querySelector('.measurement-result');
@@ -318,7 +321,20 @@
                 let particularValue = (particularSelect.value === 'Custom' && particularCustom.value.trim()) ? particularCustom.value.trim() : particularSelect.value;
                 const calcVal = evaluateExpression(measurementInput.value);
                 measurementInput.dataset.calculatedValue = calcVal;
-                measurementResult.textContent = calcVal > 0 ? (serviceItems.includes(particularValue) ? `(Qty: ${calcVal})` : `= ${calcVal.toFixed(2)} Sqft`) : '';
+
+                const unitSelect = row.querySelector('.unit-select');
+                const selectedUnit = unitSelect.value;
+
+                if (calcVal > 0) {
+                    if (selectedUnit === 'Pcs') {
+                        measurementResult.textContent = `= ${Math.round(calcVal)} Pcs`;
+                    } else {
+                        measurementResult.textContent = `= ${calcVal.toFixed(2)} Sqft`;
+                    }
+                } else {
+                    measurementResult.textContent = '';
+                }
+
                 const rateSelect = row.cells[3].querySelector('select');
                 const rateCustom = row.cells[3].querySelector('.custom-input');
                 let rate = (rateSelect.value === 'Custom' && rateCustom.value) ? parseFloat(rateCustom.value) : parseFloat(rateSelect.value);
@@ -420,8 +436,23 @@
                 const particularValue = (particularSelect.value === 'Custom' && particularCustom.value.trim()) ? particularCustom.value.trim() : particularSelect.value;
                 const measurementInput = row.querySelector('.measurement-expression');
                 const calcVal = parseFloat(measurementInput.dataset.calculatedValue || 0);
-                const isService = ["Repairing", "Wood Polish"].includes(particularValue);
-                const measurementText = calcVal > 0 ? (isService ? `Qty: ${calcVal}` : `${measurementInput.value} = ${calcVal.toFixed(2)} Sqft`) : 'N/A';
+                
+                const unitSelect = row.querySelector('.unit-select');
+                const selectedUnit = unitSelect.value;
+                let measurementText = 'N/A';
+
+                if (calcVal > 0) {
+                    if (selectedUnit === 'Pcs') {
+                        measurementText = `${Math.round(calcVal)} Pcs`;
+                    } else { // It's Sqft
+                        if (measurementInput.value.includes('*') || measurementInput.value.toLowerCase().includes('x')) {
+                            measurementText = `${measurementInput.value} = ${calcVal.toFixed(2)} Sqft`;
+                        } else {
+                            measurementText = `${calcVal.toFixed(2)} Sqft`;
+                        }
+                    }
+                }
+
                 const rateSelect = row.cells[3].querySelector('select');
                 const rateCustom = row.cells[3].querySelector('.custom-input');
                 let rate = (rateSelect.value === 'Custom' && rateCustom.value) ? parseFloat(rateCustom.value) : parseFloat(rateSelect.value);
@@ -480,15 +511,29 @@
         // Listen for changes and inputs in the main items table
         tableBody.addEventListener('change', (e) => {
             if (e.target.tagName === 'SELECT') {
+                const row = e.target.closest('tr');
                 const customInput = e.target.nextElementSibling;
-                if (e.target.value === 'Custom') {
-                    customInput.style.display = 'block';
-                    customInput.focus();
-                } else {
-                    customInput.style.display = 'none';
-                    customInput.value = '';
+                
+                // Handle showing/hiding the "Custom" input field
+                if (customInput && customInput.classList.contains('custom-input')) {
+                    if (e.target.value === 'Custom') {
+                        customInput.style.display = 'block';
+                        customInput.focus();
+                    } else {
+                        customInput.style.display = 'none';
+                        customInput.value = '';
+                    }
                 }
-                e.target.closest('tr').querySelector('.price-input').dataset.customPrice = 'false';
+
+                // Auto-switch unit for service items
+                if (e.target.closest('td').cellIndex === 1) { // Column 1 is "Particulars"
+                    const particularValue = e.target.value;
+                    const serviceItems = ["Repairing", "Wood Polish"];
+                    const unitSelect = row.querySelector('.unit-select');
+                    unitSelect.value = serviceItems.includes(particularValue) ? 'Pcs' : 'Sqft';
+                }
+
+                row.querySelector('.price-input').dataset.customPrice = 'false';
                 updateTotals();
             }
         });
@@ -514,7 +559,7 @@
         addRowBtn.addEventListener('click', addRow);
         downloadPdfBtn.addEventListener('click', () => {
             if (tableBody.rows.length === 0) { 
-                console.warn('Cannot generate PDF. Please add at least one item.');
+                alert('Please add at least one item to generate an invoice.');
                 return; 
             }
             generatePDF();
