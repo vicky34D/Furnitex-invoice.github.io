@@ -4,94 +4,127 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Furnitex Mukundapur - Quotation Generator</title>
+    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- jsPDF & AutoTable -->
+    <!-- jsPDF for creating PDFs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <!-- jsPDF-AutoTable plugin for creating tables within the PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <!-- Google Fonts for a modern look -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .table-input, .table-select { 
-            border: none; background-color: transparent; width: 100%; padding: 8px; border-radius: 4px; 
+        /* Custom CSS for a polished look and feel */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            scroll-behavior: smooth;
         }
-        .table-input:focus, .table-select:focus { outline: none; background-color: #e0f2fe; }
-        tr:hover .table-input, tr:hover .table-select { background-color: #f1f5f9; }
-        .delete-btn { cursor: pointer; opacity: 0; transition: opacity 0.2s; }
-        tr:hover .delete-btn { opacity: 1; }
-        /* small responsive tweaks for wide tables */
-        .nowrap { white-space: nowrap; }
+        .table-input, .table-select { 
+            border: none; 
+            background-color: transparent; 
+            width: 100%; 
+            padding: 8px; 
+            border-radius: 4px; 
+            transition: background-color 0.2s ease-in-out;
+        }
+        .table-input:focus, .table-select:focus { 
+            outline: none; 
+            background-color: #e0f2fe; /* Light blue on focus */
+        }
+        tr:hover .table-input, tr:hover .table-select { 
+            background-color: #f1f5f9; /* Light gray on row hover */
+        }
+        .delete-btn { 
+            cursor: pointer; 
+            opacity: 0; 
+            transition: opacity 0.2s ease-in-out; 
+            font-weight: bold;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+        tr:hover .delete-btn { 
+            opacity: 1; 
+        }
+        .nowrap { 
+            white-space: nowrap; 
+        }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800">
+
     <div class="container mx-auto p-4 md:p-8">
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        
+        <!-- Header Section -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div>
-                <h1 class="text-3xl md:text-4xl font-bold text-slate-900">Furnitex Mukundapur</h1>
-                <p class="text-slate-600">Quotation / Invoice Generator</p>
+                <h1 class="text-3xl md:text-4xl font-bold text-slate-900">FURNITEX MUKUNDAPUR</h1>
+                <p class="text-slate-600">Interior & Modular Work Solutions</p>
             </div>
-            <div class="text-right">
-                <div class="text-sm text-slate-600">Date: <span id="invoice-date"></span></div>
+            <div class="text-left md:text-right">
+                <div class="text-sm text-slate-600">Date: <span id="invoice-date" class="font-medium"></span></div>
                 <div class="text-sm text-slate-600">Invoice No: <span id="invoice-no" class="font-medium"></span></div>
             </div>
         </header>
 
-        <main class="bg-white rounded-lg shadow-lg p-6">
-            <!-- Customer details -->
-            <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <!-- Main Content Area -->
+        <main class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+            
+            <!-- Customer Details Section -->
+            <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div>
-                    <label class="text-sm font-medium text-slate-600">Customer Name</label>
-                    <input id="customer-name" type="text" placeholder="Customer Name" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <label for="customer-name" class="text-sm font-medium text-slate-600">Customer Name</label>
+                    <input id="customer-name" type="text" placeholder="Enter full name" class="w-full mt-1 border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-slate-600">Address</label>
-                    <input id="customer-address" type="text" placeholder="Address" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <label for="customer-address" class="text-sm font-medium text-slate-600">Address</label>
+                    <input id="customer-address" type="text" placeholder="Enter address" class="w-full mt-1 border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-slate-600">Phone</label>
-                    <input id="customer-phone" type="tel" placeholder="Phone number" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <label for="customer-phone" class="text-sm font-medium text-slate-600">Phone</label>
+                    <input id="customer-phone" type="tel" placeholder="Enter phone number" class="w-full mt-1 border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
                 </div>
             </section>
 
-            <!-- Quotation Table -->
+            <!-- Quotation Items Table -->
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left" id="quotation-table">
                     <thead class="bg-slate-200 text-slate-600 uppercase">
                         <tr>
-                            <th class="p-3 w-12 text-center">S. No.</th>
+                            <th class="p-3 w-12 text-center">S.No.</th>
                             <th class="p-3">Particulars</th>
-                            <th class="p-3">Measurement Details / Total Sqft</th>
-                            <th class="p-3">Per Sqft Rate</th>
-                            <th class="p-3">Price</th>
+                            <th class="p-3">Measurement / Sqft</th>
+                            <th class="p-3">Rate (₹)</th>
+                            <th class="p-3">Price (₹)</th>
                             <th class="p-3">FURNITEX Remarks</th>
                             <th class="p-3">Remarks</th>
                             <th class="p-3 w-12"></th>
                         </tr>
                     </thead>
-                    <tbody id="table-body"></tbody>
+                    <tbody id="table-body">
+                        <!-- Rows are dynamically inserted here by JavaScript -->
+                    </tbody>
                 </table>
             </div>
 
-            <!-- Actions and totals -->
+            <!-- Action Buttons and Grand Total -->
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-6">
                 <div class="flex items-center gap-3">
-                    <button id="add-row-btn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 transition">+ Add Item</button>
-                    <button id="download-pdf-btn" class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-green-700 transition">Download Invoice (PDF)</button>
+                    <button id="add-row-btn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 transition duration-200">+ Add Item</button>
+                    <button id="download-pdf-btn" class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-green-700 transition duration-200">Download Invoice (PDF)</button>
                 </div>
-
                 <div class="text-right">
                     <div class="text-lg font-bold">Total: <span id="total-price" class="text-blue-700 nowrap">₹0.00</span></div>
                 </div>
             </div>
 
-            <!-- Payment adjustments / part payments -->
-            <section class="mt-6 border-t pt-6">
+            <!-- Part / Advance Payments Section -->
+            <section class="mt-8 border-t pt-8">
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold">Part / Advance Payments</h3>
                     <div class="flex items-center gap-2">
-                        <button id="add-payment-btn" class="bg-indigo-600 text-white py-1.5 px-3 rounded-md hover:bg-indigo-700 transition">+ Add Payment</button>
-                        <button id="clear-payments-btn" class="bg-gray-200 text-gray-700 py-1.5 px-3 rounded-md hover:bg-gray-300 transition">Clear</button>
+                        <button id="add-payment-btn" class="bg-indigo-600 text-white py-1.5 px-3 rounded-md hover:bg-indigo-700 transition duration-200">+ Add Payment</button>
+                        <button id="clear-payments-btn" class="bg-gray-200 text-gray-700 py-1.5 px-3 rounded-md hover:bg-gray-300 transition duration-200">Clear</button>
                     </div>
                 </div>
 
@@ -99,69 +132,77 @@
                     <table class="w-full text-sm" id="payments-table">
                         <thead class="bg-slate-100 text-slate-600">
                             <tr>
-                                <th class="p-2 w-36">Date</th>
-                                <th class="p-2">Description</th>
+                                <th class="p-2 w-36 text-left">Date</th>
+                                <th class="p-2 text-left">Description</th>
                                 <th class="p-2 w-40 text-right">Amount (₹)</th>
                                 <th class="p-2 w-12"></th>
                             </tr>
                         </thead>
-                        <tbody id="payments-body"></tbody>
+                        <tbody id="payments-body">
+                            <!-- Payment rows are dynamically inserted here -->
+                        </tbody>
                     </table>
                 </div>
 
-                <div class="mt-4 flex flex-col md:flex-row md:justify-end md:items-center gap-3">
+                <!-- Final Totals Summary -->
+                <div class="mt-6 flex flex-col md:flex-row md:justify-end md:items-center gap-6">
                     <div class="text-right">
                         <div class="text-sm text-slate-600">Total Paid</div>
-                        <div class="text-xl font-bold text-slate-700">₹ <span id="total-paid">0.00</span></div>
+                        <div class="text-xl font-bold text-slate-700" id="total-paid">₹0.00</div>
                     </div>
                     <div class="text-right">
                         <div class="text-sm text-slate-600">Final Payable</div>
-                        <div id="final-payable" class="text-2xl font-extrabold text-red-600">₹ 0.00</div>
+                        <div id="final-payable" class="text-2xl font-extrabold text-red-600">₹0.00</div>
                     </div>
                 </div>
             </section>
         </main>
 
-        <footer class="text-center text-slate-500 mt-6 text-sm">
+        <!-- Footer -->
+        <footer class="text-center text-slate-500 mt-8 text-sm">
             <p>&copy; <span id="current-year"></span> Furnitex Mukundapur. All rights reserved.</p>
         </footer>
     </div>
 
     <script>
-        // ---------- Utilities ----------
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- UTILITY FUNCTIONS ---
+
+        /**
+         * Safely formats a number to the Indian currency system (e.g., 1,23,456.78)
+         * This is the definitive fix for the weird character bug.
+         * @param {number | string} num The number to format.
+         * @returns {string} The formatted currency string.
+         */
         const formatMoney = (num) => {
             const n = Number(num) || 0;
-            return n.toLocaleString('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 });
+            const value = n.toFixed(2);
+            let [integerPart, decimalPart] = value.split('.');
+            integerPart = integerPart.replace(/(\d)(?=(\d\d)+\d{3}(?!\d))/g, '$1,');
+            return `${integerPart}.${decimalPart}`;
         };
 
-        const todayISO = () => {
-            const d = new Date();
-            const yyyy = d.getFullYear();
-            const mm = String(d.getMonth()+1).padStart(2,'0');
-            const dd = String(d.getDate()).padStart(2,'0');
-            return `${yyyy}-${mm}-${dd}`;
-        };
+        /**
+         * Returns today's date in YYYY-MM-DD format.
+         * @returns {string}
+         */
+        const todayISO = () => new Date().toISOString().split('T')[0];
 
+        /**
+         * Generates a unique invoice number based on the current timestamp.
+         * @returns {string}
+         */
         const genInvoiceNumber = () => {
             const d = new Date();
-            const y = d.getFullYear();
-            const mm = String(d.getMonth()+1).padStart(2,'0');
-            const dd = String(d.getDate()).padStart(2,'0');
-            const hh = String(d.getHours()).padStart(2,'0');
-            const min = String(d.getMinutes()).padStart(2,'0');
-            const ss = String(d.getSeconds()).padStart(2,'0');
-            return `FTX-${y}${mm}${dd}-${hh}${min}${ss}`;
+            return `FTX-${d.getFullYear()}${(d.getMonth()+1).toString().padStart(2,'0')}${d.getDate().toString().padStart(2,'0')}-${d.getHours().toString().padStart(2,'0')}${d.getMinutes().toString().padStart(2,'0')}${d.getSeconds().toString().padStart(2,'0')}`;
         };
 
-        // ---------- Initial data/options ----------
-        const particularsOptions = [
-            "Upper Kitchen", "Lower Kitchen", "Wardrobe", "Almirah", "Bed",
-            "Chair", "Dining table", "Tv Unit", "Repairing", "Wood Polish", "Custom"
-        ];
+        // --- GLOBAL OPTIONS & DOM REFERENCES ---
+        
+        const particularsOptions = [ "Upper Kitchen", "Lower Kitchen", "Wardrobe", "Almirah", "Bed", "Chair", "Dining table", "Tv Unit", "Repairing", "Wood Polish", "Custom" ];
         const rateOptions = [1000, 1100, 1200, 1300, 1400, "Custom"];
         const remarksOptions = ["Deviation", "No deviation", "Upgraded", "Custom"];
 
-        // ---------- DOM refs ----------
         const tableBody = document.getElementById('table-body');
         const addRowBtn = document.getElementById('add-row-btn');
         const downloadPdfBtn = document.getElementById('download-pdf-btn');
@@ -169,524 +210,324 @@
         const currentYear = document.getElementById('current-year');
         const invoiceDateEl = document.getElementById('invoice-date');
         const invoiceNoEl = document.getElementById('invoice-no');
-
         const paymentsBody = document.getElementById('payments-body');
         const addPaymentBtn = document.getElementById('add-payment-btn');
         const clearPaymentsBtn = document.getElementById('clear-payments-btn');
         const totalPaidEl = document.getElementById('total-paid');
         const finalPayableEl = document.getElementById('final-payable');
 
-        // Set initial header info
-        currentYear.textContent = new Date().getFullYear();
-        invoiceDateEl.textContent = new Date().toLocaleDateString('en-IN');
-        invoiceNoEl.textContent = genInvoiceNumber();
-
-        // ---------- Row creation helpers ----------
+        // --- CORE LOGIC FUNCTIONS ---
+        
+        /**
+         * Creates an HTML select dropdown element.
+         * @param {string[]} options - Array of display text for options.
+         * @param {any[]} [values=options] - Array of values for options.
+         * @returns {HTMLSelectElement}
+         */
         const createSelect = (options, values = options) => {
             const select = document.createElement('select');
             select.className = 'table-select';
             options.forEach((opt, idx) => {
                 const o = document.createElement('option');
-                o.value = values[idx];
-                o.textContent = opt;
+                o.value = values[idx]; 
+                o.textContent = opt; 
                 select.appendChild(o);
             });
             return select;
         };
 
+        /**
+         * Adds a new item row to the main quotation table.
+         */
         const addRow = () => {
-            const rowIndex = tableBody.rows.length;
             const tr = tableBody.insertRow();
             tr.className = 'border-b border-slate-200 hover:bg-slate-50';
-
-            // S. No.
-            const c0 = tr.insertCell(0);
-            c0.innerHTML = `<div class="p-3 text-center font-medium text-slate-500">${rowIndex + 1}</div>`;
-
-            // Particulars (select + always-visible custom input)
-            const c1 = tr.insertCell(1);
-            const selectPart = createSelect(particularsOptions);
-            selectPart.value = particularsOptions[0];
-            c1.appendChild(selectPart);
-            const customPart = document.createElement('input');
-            customPart.type = 'text';
-            customPart.placeholder = 'Custom particulars (optional)';
-            customPart.className = 'table-input mt-1';
-            c1.appendChild(customPart);
-
-            // Measurement expression + result
-            const c2 = tr.insertCell(2);
-            c2.innerHTML = `
-                <div class="flex items-center gap-2">
-                    <input type="text" class="table-input measurement-expression flex-grow" placeholder="e.g., 7*7 or 10" data-calculated-value="0">
-                    <span class="measurement-result text-slate-600 font-medium whitespace-nowrap"></span>
-                </div>
+            tr.innerHTML = `
+                <td class="p-3 text-center font-medium text-slate-500">${tableBody.rows.length}</td>
+                <td class="p-2">
+                    ${createSelect(particularsOptions).outerHTML}
+                    <input type="text" placeholder="Custom particulars..." class="table-input mt-1 custom-input" style="display: none;">
+                </td>
+                <td class="p-2">
+                    <div class="flex items-center gap-2">
+                        <input type="text" class="table-input measurement-expression flex-grow" placeholder="e.g., 7*7 or 10" data-calculated-value="0">
+                        <span class="measurement-result text-slate-600 font-medium whitespace-nowrap"></span>
+                    </div>
+                </td>
+                <td class="p-2">
+                    ${createSelect(rateOptions.map(r => typeof r === 'number' ? `₹ ${formatMoney(r)}` : r), rateOptions).outerHTML}
+                    <input type="number" min="0" step="0.01" placeholder="Custom rate..." class="table-input mt-1 custom-input" style="display: none;">
+                </td>
+                <td class="p-2">
+                    <input type="number" min="0" step="0.01" placeholder="Auto" class="table-input price-input" data-custom-price="false">
+                </td>
+                <td class="p-2">
+                    ${createSelect(remarksOptions).outerHTML}
+                    <input type="text" placeholder="Custom remark..." class="table-input mt-1 custom-input" style="display: none;">
+                </td>
+                <td class="p-2">
+                    <input type="text" placeholder="Add notes..." class="table-input">
+                </td>
+                <td class="p-3 text-center">
+                    <span class="delete-btn text-red-500 hover:text-red-700" title="Delete Row">&times;</span>
+                </td>
             `;
-
-            // Rate (select + custom input)
-            const c3 = tr.insertCell(3);
-            const selectRate = createSelect(rateOptions.map(r => typeof r === 'number' ? `Rs. ${r}` : r), rateOptions);
-            selectRate.value = rateOptions[0];
-            c3.appendChild(selectRate);
-            const customRate = document.createElement('input');
-            customRate.type = 'number';
-            customRate.min = '0';
-            customRate.step = '0.01';
-            customRate.placeholder = 'Custom rate (optional)';
-            customRate.className = 'table-input mt-1';
-            c3.appendChild(customRate);
-
-            // Price input (auto or manual override)
-            const c4 = tr.insertCell(4);
-            const priceInput = document.createElement('input');
-            priceInput.type = 'number';
-            priceInput.min = '0';
-            priceInput.step = '0.01';
-            priceInput.placeholder = 'Auto';
-            priceInput.className = 'table-input price-input';
-            priceInput.dataset.customPrice = 'false';
-            c4.appendChild(priceInput);
-
-            // FURNITEX remarks (select + custom)
-            const c5 = tr.insertCell(5);
-            const selectRemark = createSelect(remarksOptions);
-            selectRemark.value = remarksOptions[0];
-            c5.appendChild(selectRemark);
-            const customRemark = document.createElement('input');
-            customRemark.type = 'text';
-            customRemark.placeholder = 'Custom remark (optional)';
-            customRemark.className = 'table-input mt-1';
-            c5.appendChild(customRemark);
-
-            // Remarks free text
-            const c6 = tr.insertCell(6);
-            const remarksInput = document.createElement('input');
-            remarksInput.type = 'text';
-            remarksInput.placeholder = 'Add custom notes...';
-            remarksInput.className = 'table-input';
-            c6.appendChild(remarksInput);
-
-            // Delete
-            const c7 = tr.insertCell(7);
-            c7.className = 'p-3 text-center';
-            c7.innerHTML = `<span class="delete-btn text-red-500 hover:text-red-700" title="Delete Row">&times;</span>`;
-
-            // Attach listeners (delegated listeners also exist globally but some are helpful here)
-            selectRate.addEventListener('change', () => {
-                // if user selects "Custom" we leave customRate visible (it's always visible anyway)
-                priceInput.dataset.customPrice = 'false';
-                updateTotals();
-            });
-
-            selectPart.addEventListener('change', () => {
-                priceInput.dataset.customPrice = 'false';
-                updateTotals();
-            });
-
-            // measurement change
-            tr.querySelector('.measurement-expression').addEventListener('input', () => {
-                priceInput.dataset.customPrice = 'false';
-                updateTotals();
-            });
-
-            // custom rate changes
-            customRate.addEventListener('input', () => {
-                priceInput.dataset.customPrice = 'false';
-                updateTotals();
-            });
-
-            // manual price override
-            priceInput.addEventListener('input', () => {
-                if (priceInput.value) {
-                    priceInput.dataset.customPrice = 'true';
-                    priceInput.placeholder = 'Custom';
-                } else {
-                    priceInput.dataset.customPrice = 'false';
-                    priceInput.placeholder = 'Auto';
-                }
-                updateTotals();
-            });
-
-            // delete row
-            c7.querySelector('.delete-btn').addEventListener('click', () => {
-                tr.remove();
-                updateSerialNumbers();
-                updateTotals();
-            });
-
-            // initial update
             updateTotals();
         };
 
+        /**
+         * Updates the serial numbers for all rows in the table.
+         */
         const updateSerialNumbers = () => {
-            for (let i = 0; i < tableBody.rows.length; i++) {
-                tableBody.rows[i].cells[0].firstElementChild.textContent = i + 1;
+            tableBody.querySelectorAll('tr').forEach((row, index) => {
+                row.cells[0].textContent = index + 1;
+            });
+        };
+
+        /**
+         * Safely evaluates a mathematical expression string (e.g., "7*7" or "10").
+         * @param {string} expression - The string to evaluate.
+         * @returns {number} The result of the calculation.
+         */
+        const evaluateExpression = (expression) => {
+            if (!expression) return 0;
+            const exprTrim = String(expression).trim();
+            if (!isNaN(parseFloat(exprTrim)) && isFinite(exprTrim)) return parseFloat(exprTrim);
+            // Allow numbers, decimal points, and operators *, x, X
+            const cleaned = exprTrim.replace(/[^0-9.*xX]/g, '').replace(/[xX]/g, '*');
+            try { 
+                // Use a safe Function constructor instead of eval()
+                return new Function(`return ${cleaned}`)() || 0; 
+            }
+            catch (e) { 
+                console.error("Invalid expression:", e);
+                return 0; 
             }
         };
 
-        // Evaluate measurement expression safely (digits, decimals, * or x)
-        const evaluateExpression = (expression) => {
-            if (!expression) return 0;
-            const exprTrim = expression.trim();
-            if (!isNaN(parseFloat(exprTrim)) && isFinite(exprTrim)) return parseFloat(exprTrim);
-            // allow patterns like 7*7, 7x7, 7.5*8
-            const cleaned = exprTrim.replace(/[^0-9.*xX]/g, '');
-            const op = cleaned.includes('*') ? '*' : (cleaned.toLowerCase().includes('x') ? 'x' : null);
-            if (!op) return 0;
-            const parts = cleaned.split(op);
-            if (parts.length !== 2) return 0;
-            const a = parseFloat(parts[0]);
-            const b = parseFloat(parts[1]);
-            if (isNaN(a) || isNaN(b)) return 0;
-            return a * b;
-        };
-
-        // ---------- Totals ---------- 
+        /**
+         * Recalculates all prices and totals for the entire invoice.
+         */
         const updateTotals = () => {
             let grandTotal = 0;
-            const rows = [...tableBody.rows];
             const serviceItems = ["Repairing", "Wood Polish"];
-
-            rows.forEach(row => {
+            tableBody.querySelectorAll('tr').forEach(row => {
                 const measurementInput = row.querySelector('.measurement-expression');
                 const measurementResult = row.querySelector('.measurement-result');
                 const priceInput = row.querySelector('.price-input');
-
                 const particularSelect = row.cells[1].querySelector('select');
-                const particularCustom = row.cells[1].querySelector('input[type="text"]');
-                let particularValue = particularSelect.value;
-                if (particularValue === 'Custom' && particularCustom.value.trim()) {
-                    particularValue = particularCustom.value.trim();
-                }
-
-                const expr = (measurementInput.value || '').trim();
-                const calcVal = evaluateExpression(expr);
+                const particularCustom = row.cells[1].querySelector('.custom-input');
+                let particularValue = (particularSelect.value === 'Custom' && particularCustom.value.trim()) ? particularCustom.value.trim() : particularSelect.value;
+                const calcVal = evaluateExpression(measurementInput.value);
                 measurementInput.dataset.calculatedValue = calcVal;
-
-                if (calcVal > 0) {
-                    if (serviceItems.includes(particularValue)) {
-                        measurementResult.textContent = `(Qty: ${calcVal.toFixed(2)})`;
-                    } else {
-                        measurementResult.textContent = `= ${calcVal.toFixed(2)} Sqft`;
-                    }
-                } else {
-                    measurementResult.textContent = '';
-                }
-
-                // rate
+                measurementResult.textContent = calcVal > 0 ? (serviceItems.includes(particularValue) ? `(Qty: ${calcVal})` : `= ${calcVal.toFixed(2)} Sqft`) : '';
                 const rateSelect = row.cells[3].querySelector('select');
-                const rateCustom = row.cells[3].querySelector('input[type="number"]');
-                let rate = 0;
-                if (rateSelect.value === 'Custom' && rateCustom.value) {
-                    rate = parseFloat(rateCustom.value) || 0;
-                } else if (rateSelect.value) {
-                    rate = parseFloat(rateSelect.value) || 0;
-                }
-
-                // auto calculate price if not custom
+                const rateCustom = row.cells[3].querySelector('.custom-input');
+                let rate = (rateSelect.value === 'Custom' && rateCustom.value) ? parseFloat(rateCustom.value) : parseFloat(rateSelect.value);
+                rate = isNaN(rate) ? 0 : rate;
                 if (priceInput.dataset.customPrice !== 'true') {
                     const price = calcVal * rate;
-                    if (price > 0) {
-                        priceInput.value = price.toFixed(2);
-                        priceInput.placeholder = 'Auto';
-                    } else {
-                        priceInput.value = '';
-                        priceInput.placeholder = 'Auto';
-                    }
+                    priceInput.value = price > 0 ? price.toFixed(2) : '';
                 }
-
                 grandTotal += parseFloat(priceInput.value || 0);
             });
-
             totalPriceEl.textContent = `₹${formatMoney(grandTotal)}`;
-
-            // update payments and final payable
             updatePaymentsAndFinal(grandTotal);
         };
 
-        // ---------- Payments section ----------
+        /**
+         * Adds a new row to the payments table.
+         */
         const addPaymentRow = (date = todayISO(), desc = '', amount = '') => {
-            const tr = document.createElement('tr');
+            const tr = paymentsBody.insertRow();
             tr.className = 'border-b border-slate-100';
-
-            // Date cell
-            const tdDate = document.createElement('td');
-            tdDate.className = 'p-2';
-            const dateInput = document.createElement('input');
-            dateInput.type = 'date';
-            dateInput.value = date;
-            dateInput.className = 'table-input';
-            tdDate.appendChild(dateInput);
-            tr.appendChild(tdDate);
-
-            // Description
-            const tdDesc = document.createElement('td');
-            tdDesc.className = 'p-2';
-            const descInput = document.createElement('input');
-            descInput.type = 'text';
-            descInput.placeholder = 'Description (e.g., advance, mid-payment)';
-            descInput.value = desc;
-            descInput.className = 'table-input';
-            tdDesc.appendChild(descInput);
-            tr.appendChild(tdDesc);
-
-            // Amount (right aligned)
-            const tdAmt = document.createElement('td');
-            tdAmt.className = 'p-2 text-right';
-            const amtInput = document.createElement('input');
-            amtInput.type = 'number';
-            amtInput.min = '0';
-            amtInput.step = '0.01';
-            amtInput.placeholder = '0.00';
-            amtInput.value = amount ? parseFloat(amount).toFixed(2) : '';
-            amtInput.className = 'table-input text-right';
-            tdAmt.appendChild(amtInput);
-            tr.appendChild(tdAmt);
-
-            // Delete
-            const tdDel = document.createElement('td');
-            tdDel.className = 'p-2 text-center';
-            const delBtn = document.createElement('button');
-            delBtn.type = 'button';
-            delBtn.innerHTML = '&times;';
-            delBtn.className = 'text-red-500 hover:text-red-700 font-bold';
-            tdDel.appendChild(delBtn);
-            tr.appendChild(tdDel);
-
-            // attach listeners
-            amtInput.addEventListener('input', () => updateTotals());
-            dateInput.addEventListener('change', () => {});
-            descInput.addEventListener('input', () => {});
-            delBtn.addEventListener('click', () => {
-                tr.remove();
-                updateTotals();
-            });
-
-            paymentsBody.appendChild(tr);
+            tr.innerHTML = `
+                <td class="p-2"><input type="date" value="${date}" class="table-input"></td>
+                <td class="p-2"><input type="text" placeholder="Description (e.g., advance)" value="${desc}" class="table-input"></td>
+                <td class="p-2 text-right"><input type="number" min="0" step="0.01" placeholder="0.00" value="${amount ? parseFloat(amount).toFixed(2) : ''}" class="table-input text-right"></td>
+                <td class="p-2 text-center"><button type="button" class="text-red-500 hover:text-red-700 font-bold delete-payment">&times;</button></td>
+            `;
+            tr.querySelector('.delete-payment').addEventListener('click', () => { tr.remove(); updateTotals(); });
+            tr.querySelectorAll('input').forEach(input => input.addEventListener('input', updateTotals));
             updateTotals();
         };
 
-        const clearPayments = () => {
-            paymentsBody.innerHTML = '';
-            updateTotals();
+        /**
+         * Clears all entries from the payments table.
+         */
+        const clearPayments = () => { 
+            paymentsBody.innerHTML = ''; 
+            updateTotals(); 
         };
 
+        /**
+         * Updates the total paid and final payable amounts.
+         * @param {number} grandTotal - The current grand total of the invoice.
+         */
         const updatePaymentsAndFinal = (grandTotal) => {
-            // sum payments
             let paid = 0;
-            const rows = [...paymentsBody.children];
-            const paymentsForPdf = [];
-            rows.forEach(r => {
-                const date = r.children[0].querySelector('input').value || '';
-                const desc = r.children[1].querySelector('input').value || '';
-                const amt = parseFloat(r.children[2].querySelector('input').value || 0) || 0;
+            window._paymentsSnapshot = []; // Store payment data for PDF
+            paymentsBody.querySelectorAll('tr').forEach(r => {
+                const amt = parseFloat(r.querySelector('input[type="number"]').value || 0);
                 paid += amt;
-                paymentsForPdf.push({ date, desc, amt });
+                window._paymentsSnapshot.push({ date: r.querySelector('input[type="date"]').value, desc: r.querySelector('input[type="text"]').value, amt: amt });
             });
-
-            totalPaidEl.textContent = formatMoney(paid);
+            // Update UI with clean, formatted values
+            totalPaidEl.textContent = `₹${formatMoney(paid)}`;
             const finalPayable = Math.max(0, grandTotal - paid);
-            finalPayableEl.textContent = `₹ ${formatMoney(finalPayable)}`;
-
-            // store payments for PDF generation (attach to a global var)
-            window._paymentsSnapshot = paymentsForPdf;
+            finalPayableEl.textContent = `₹${formatMoney(finalPayable)}`;
         };
-
-        // ---------- Generate PDF ----------
+        
+        /**
+         * Generates the final PDF invoice.
+         */
         const generatePDF = () => {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ unit: 'pt', format: 'a4' });
-            const leftMargin = 40;
-            let y = 40;
+            const leftMargin = 40, rightMargin = doc.internal.pageSize.getWidth() - 40;
+            let y = 50;
 
+            // PDF Header
+            doc.setFontSize(20); doc.setFont('helvetica', 'bold'); doc.text('FURNITEX MUKUNDAPUR', leftMargin, y);
+            doc.setFontSize(9); doc.setFont('helvetica', 'normal');
+            doc.text('6A 108 Mukundapur, Kolkata-700099', leftMargin, y + 12);
+            doc.text('Email: vdhar29@gmail.com | Phone: 6290591422', leftMargin, y + 22);
+            doc.setFontSize(14); doc.setFont('helvetica', 'bold'); doc.text('INVOICE', rightMargin, y, { align: 'right' });
+            y += 40; doc.setLineWidth(1); doc.line(leftMargin, y, rightMargin, y); y += 20;
+
+            // PDF Customer Info
             const customerName = document.getElementById('customer-name').value || 'N/A';
-            const customerAddress = document.getElementById('customer-address').value || 'N/A';
-            const customerPhone = document.getElementById('customer-phone').value || 'N/A';
-            const invoiceNo = invoiceNoEl.textContent;
-            const invoiceDate = invoiceDateEl.textContent;
-
-            doc.setFontSize(18);
-            doc.setFont('helvetica', 'bold');
-            doc.text('Furnitex Mukundapur', doc.internal.pageSize.getWidth() / 2, y, { align: 'center' });
-            y += 26;
-            doc.setFontSize(12);
-            doc.setFont('helvetica', 'normal');
-            doc.text(`Quotation / Invoice`, doc.internal.pageSize.getWidth() / 2, y, { align: 'center' });
-            y += 20;
-
-            doc.setLineWidth(0.5);
-            doc.line(leftMargin, y, doc.internal.pageSize.getWidth() - leftMargin, y);
-            y += 14;
-
-            // Customer block
-            doc.setFontSize(10);
-            doc.setFont('helvetica', 'bold');
-            doc.text('Bill To:', leftMargin, y);
+            doc.setFontSize(10); doc.setFont('helvetica', 'bold'); doc.text('BILL TO:', leftMargin, y);
             doc.setFont('helvetica', 'normal');
             doc.text(customerName, leftMargin, y + 12);
-            doc.text(customerAddress, leftMargin, y + 26);
-            doc.text('Phone: ' + customerPhone, leftMargin, y + 40);
-
-            // Invoice meta (right)
+            doc.text(document.getElementById('customer-address').value || 'N/A', leftMargin, y + 24);
+            doc.text(document.getElementById('customer-phone').value || 'N/A', leftMargin, y + 36);
             doc.setFont('helvetica', 'bold');
-            doc.text('Invoice No:', doc.internal.pageSize.getWidth() - leftMargin - 220, y);
+            doc.text('Invoice No:', rightMargin - 100, y); doc.text('Date:', rightMargin - 100, y + 12);
             doc.setFont('helvetica', 'normal');
-            doc.text(invoiceNo, doc.internal.pageSize.getWidth() - leftMargin - 70, y);
-            doc.setFont('helvetica', 'bold');
-            doc.text('Date:', doc.internal.pageSize.getWidth() - leftMargin - 220, y + 14);
-            doc.setFont('helvetica', 'normal');
-            doc.text(invoiceDate, doc.internal.pageSize.getWidth() - leftMargin - 70, y + 14);
-
+            doc.text(invoiceNoEl.textContent, rightMargin, y, { align: 'right' });
+            doc.text(invoiceDateEl.textContent, rightMargin, y + 12, { align: 'right' });
             y += 60;
 
-            // Build items table data
-            const headers = ["S. No.", "Particulars", "Measurement", "Rate", "Price", "FURNITEX Remarks", "Remarks"];
+            // PDF Items Table
+            const head = [["SNo", "Particulars", "Measurement", "Rate (₹)", "Price (₹)"]];
             const body = [];
-            for (let i = 0; i < tableBody.rows.length; i++) {
-                const r = tableBody.rows[i];
-
-                // particular
-                const partSelect = r.cells[1].querySelector('select').value;
-                const partCustom = r.cells[1].querySelector('input[type="text"]').value;
-                let particularVal = partSelect === 'Custom' && partCustom ? partCustom : partSelect;
-
-                // measurement
-                const expr = r.querySelector('.measurement-expression').value || '';
-                const calc = parseFloat(r.querySelector('.measurement-expression').dataset.calculatedValue || 0).toFixed(2);
-                let measurementDisplay = '';
-                if (parseFloat(calc) > 0) {
-                    if (["Repairing","Wood Polish"].includes(particularVal)) {
-                        measurementDisplay = `Qty: ${calc}`;
-                    } else if (expr.includes('*') || expr.toLowerCase().includes('x')) {
-                        measurementDisplay = `${expr} = ${calc} Sqft`;
-                    } else {
-                        measurementDisplay = `${calc} Sqft`;
-                    }
-                } else {
-                    measurementDisplay = 'N/A';
-                }
-
-                // rate
-                const rateSelect = r.cells[3].querySelector('select').value;
-                const rateCustom = r.cells[3].querySelector('input[type="number"]').value;
-                let rateVal = rateSelect === 'Custom' && rateCustom ? parseFloat(rateCustom) : parseFloat(rateSelect || 0);
-                rateVal = isNaN(rateVal) ? 0 : rateVal;
-
-                // price
-                const priceVal = parseFloat(r.querySelector('.price-input').value || 0);
-
-                // furnitex remarks
-                const remSelect = r.cells[5].querySelector('select').value;
-                const remCustom = r.cells[5].querySelector('input[type="text"]').value;
-                const furnitexRemark = remSelect === 'Custom' && remCustom ? remCustom : remSelect;
-
-                // remarks
-                const remarks = r.cells[6].querySelector('input').value || '';
-
-                body.push([
-                    String(i+1),
-                    particularVal,
-                    measurementDisplay,
-                    `₹ ${rateVal.toFixed(2)}`,
-                    `₹ ${priceVal.toFixed(2)}`,
-                    furnitexRemark,
-                    remarks
-                ]);
-            }
-
-            // Use autoTable for items
-            doc.autoTable({
-                head: [headers],
-                body: body,
-                startY: y,
-                theme: 'grid',
-                headStyles: { fillColor: [75, 85, 99] },
-                styles: { fontSize: 9, cellPadding: 4 }
+            tableBody.querySelectorAll('tr').forEach((row, i) => {
+                const particularSelect = row.cells[1].querySelector('select');
+                const particularCustom = row.cells[1].querySelector('.custom-input');
+                const particularValue = (particularSelect.value === 'Custom' && particularCustom.value.trim()) ? particularCustom.value.trim() : particularSelect.value;
+                const measurementInput = row.querySelector('.measurement-expression');
+                const calcVal = parseFloat(measurementInput.dataset.calculatedValue || 0);
+                const isService = ["Repairing", "Wood Polish"].includes(particularValue);
+                const measurementText = calcVal > 0 ? (isService ? `Qty: ${calcVal}` : `${measurementInput.value} = ${calcVal.toFixed(2)} Sqft`) : 'N/A';
+                const rateSelect = row.cells[3].querySelector('select');
+                const rateCustom = row.cells[3].querySelector('.custom-input');
+                let rate = (rateSelect.value === 'Custom' && rateCustom.value) ? parseFloat(rateCustom.value) : parseFloat(rateSelect.value);
+                rate = isNaN(rate) ? 0 : rate;
+                const price = parseFloat(row.querySelector('.price-input').value || 0);
+                body.push([ i + 1, particularValue, measurementText, formatMoney(rate), formatMoney(price) ]);
             });
+            doc.autoTable({
+                head, body, startY: y, theme: 'grid',
+                headStyles: { fillColor: [41, 51, 61], textColor: 255, fontStyle: 'bold' },
+                styles: { fontSize: 9, cellPadding: 5 },
+                columnStyles: {
+                    0: { halign: 'center', cellWidth: 30 }, 1: { cellWidth: 150 }, 2: { cellWidth: 150 },
+                    3: { halign: 'right', cellWidth: 80 }, 4: { halign: 'right', cellWidth: 90 },
+                }
+            });
+            y = doc.autoTable.previous.finalY + 20;
 
-            let finalY = doc.autoTable.previous.finalY + 10;
-
-            // Totals
-            const grandTotalValue = parseFloat((totalPriceEl.textContent || '₹0').replace(/[^0-9.-]+/g,"")) || 0;
-            doc.setFont('helvetica', 'bold');
-            doc.text('Grand Total:', doc.internal.pageSize.getWidth() - leftMargin - 200, finalY);
-            doc.setFont('helvetica', 'bold');
-            doc.text(`₹ ${formatMoney(grandTotalValue)}`, doc.internal.pageSize.getWidth() - leftMargin - 20, finalY, { align: 'right' });
-            finalY += 18;
-
-            // Payments table
-            const payHead = ["Date", "Description", "Amount (₹)"];
-            const payBody = (window._paymentsSnapshot || []).map(p => [p.date || 'N/A', p.desc || 'N/A', `₹ ${formatMoney(p.amt)}`]);
-
-            if (payBody.length > 0) {
-                doc.setFont('helvetica','bold');
-                doc.text('Payments / Advances:', leftMargin, finalY + 6);
-                finalY += 10;
-                doc.autoTable({
-                    head: [payHead],
-                    body: payBody,
-                    startY: finalY,
-                    theme: 'grid',
-                    headStyles: { fillColor: [75, 85, 99] },
-                    styles: { fontSize: 9, cellPadding: 4 }
-                });
-                finalY = doc.autoTable.previous.finalY + 10;
-            } else {
-                doc.setFont('helvetica','normal');
-                doc.text('No payments recorded.', leftMargin, finalY + 6);
-                finalY += 20;
+            // PDF Totals Section
+            const grandTotal = parseFloat((totalPriceEl.textContent || '0').replace(/[^0-9.-]+/g,""));
+            doc.setFontSize(10); doc.setFont('helvetica', 'bold');
+            doc.text('Grand Total:', rightMargin - 150, y);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`₹ ${formatMoney(grandTotal)}`, rightMargin, y, { align: 'right' });
+            y += 18;
+            if (window._paymentsSnapshot && window._paymentsSnapshot.length > 0) {
+                 window._paymentsSnapshot.forEach(p => {
+                    doc.setFont('helvetica', 'bold');
+                    doc.text(`Paid (${new Date(p.date).toLocaleDateString('en-IN')}):`, rightMargin - 150, y);
+                    doc.setFont('helvetica', 'normal');
+                    doc.text(`- ₹ ${formatMoney(p.amt)}`, rightMargin, y, { align: 'right' });
+                    y += 18;
+                 });
             }
+            const finalPayableText = finalPayableEl.textContent || '₹0.00';
+            const finalPayable = parseFloat(finalPayableText.replace(/[^0-9.-]+/g,""));
+            doc.setLineWidth(1); doc.line(rightMargin - 160, y, rightMargin, y); y += 5;
+            doc.setFontSize(12); doc.setFont('helvetica', 'bold');
+            doc.text('Amount Due:', rightMargin - 150, y + 12);
+            doc.text(`₹ ${formatMoney(finalPayable)}`, rightMargin, y + 12, { align: 'right' });
+            
+            // PDF Footer
+            const pageHeight = doc.internal.pageSize.getHeight();
+            doc.setFontSize(9); doc.setFont('helvetica', 'bold');
+            doc.text('Terms & Conditions', leftMargin, pageHeight - 60);
+            doc.setFont('helvetica', 'normal');
+            doc.text('1. Payment to be made within 15 days of invoice date.', leftMargin, pageHeight - 50);
+            doc.text('2. All work is guaranteed for a period of one year.', leftMargin, pageHeight - 40);
 
-            // Totals: total paid and final payable
-            const totalPaid = parseFloat((totalPaidEl.textContent || '0').replace(/[^0-9.-]+/g,"")) || 0;
-            const finalPayable = Math.max(0, grandTotalValue - totalPaid);
-
-            doc.setFont('helvetica','bold');
-            doc.text('Total Paid:', doc.internal.pageSize.getWidth() - leftMargin - 200, finalY);
-            doc.setFont('helvetica','normal');
-            doc.text(`₹ ${formatMoney(totalPaid)}`, doc.internal.pageSize.getWidth() - leftMargin - 20, finalY, { align: 'right' });
-            finalY += 16;
-
-            doc.setFont('helvetica','bold');
-            doc.setFontSize(14);
-            doc.setTextColor(200, 40, 40);
-            doc.text('Final Payable:', doc.internal.pageSize.getWidth() - leftMargin - 200, finalY);
-            doc.text(`₹ ${formatMoney(finalPayable)}`, doc.internal.pageSize.getWidth() - leftMargin - 20, finalY, { align: 'right' });
-
-            // Save
-            const safeName = (document.getElementById('customer-name').value || 'Invoice').replace(/\s+/g,'-');
-            doc.save(`${invoiceNo}-${safeName}.pdf`);
+            // Save the PDF
+            doc.save(`${invoiceNoEl.textContent}-${customerName.replace(/\s+/g, '-')}.pdf`);
         };
 
-        // ---------- Event wiring ----------
+        // --- EVENT LISTENERS ---
+        
+        // Listen for changes and inputs in the main items table
+        tableBody.addEventListener('change', (e) => {
+            if (e.target.tagName === 'SELECT') {
+                const customInput = e.target.nextElementSibling;
+                if (e.target.value === 'Custom') {
+                    customInput.style.display = 'block';
+                    customInput.focus();
+                } else {
+                    customInput.style.display = 'none';
+                    customInput.value = '';
+                }
+                e.target.closest('tr').querySelector('.price-input').dataset.customPrice = 'false';
+                updateTotals();
+            }
+        });
+        tableBody.addEventListener('input', (e) => {
+             if (e.target.classList.contains('measurement-expression') || e.target.classList.contains('custom-input')) {
+                e.target.closest('tr').querySelector('.price-input').dataset.customPrice = 'false';
+            }
+            if (e.target.classList.contains('price-input')) {
+                e.target.dataset.customPrice = !!e.target.value;
+                e.target.placeholder = e.target.value ? 'Custom' : 'Auto';
+            }
+            updateTotals();
+        });
+        tableBody.addEventListener('click', (e) => {
+            if (e.target.classList.contains('delete-btn')) {
+                e.target.closest('tr').remove();
+                updateSerialNumbers();
+                updateTotals();
+            }
+        });
+
+        // Add/Download/Payment buttons
         addRowBtn.addEventListener('click', addRow);
         downloadPdfBtn.addEventListener('click', () => {
-            if (tableBody.rows.length === 0) {
-                alert('Please add at least one item to the quotation before downloading.');
-                return;
+            if (tableBody.rows.length === 0) { 
+                console.warn('Cannot generate PDF. Please add at least one item.');
+                return; 
             }
             generatePDF();
         });
-
-        // delegate changes on the table to recalc totals
-        tableBody.addEventListener('input', (e) => {
-            // any input change likely affects totals
-            updateTotals();
+        addPaymentBtn.addEventListener('click', () => addPaymentRow());
+        clearPaymentsBtn.addEventListener('click', () => { 
+            if (confirm('Are you sure you want to clear all payment entries?')) {
+                clearPayments();
+            }
         });
 
-        // payments
-        addPaymentBtn.addEventListener('click', () => addPaymentRow(todayISO(), 'Advance', ''));
-        clearPaymentsBtn.addEventListener('click', () => {
-            if (confirm('Clear all payment entries?')) clearPayments();
-        });
-
-        // initialize with one row and one payment sample (you can remove or keep)
-        addRow();
-        // no initial payment by default (comment if want sample)
-        // addPaymentRow(todayISO(), 'Advance on order', '10000');
-
-        // keep totals synced on load
-        updateTotals();
+        // --- INITIALIZATION ---
+        addRow(); // Start with one blank row
+        updateTotals(); // Initialize all totals to zero
+    });
     </script>
 </body>
 </html>
